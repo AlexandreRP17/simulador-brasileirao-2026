@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Simulador Brasileirão + Copas 2026</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="brand-logo-crop" role="img" aria-label="Logo do Brasileirão">
+        <span class="visually-hidden">Brasileirão</span>
+      </div>
+      <div class="header-copy">
+        <div class="eyebrow">Simulador do Brasileirão 2026</div>
+        <h1>Brasileirão + Campeões das Copas</h1>
+        <p>Simule placares, acompanhe a classificação e explore como os campeões das copas afetam as vagas continentais para a temporada 2027.</p>
+      </div>
+    </div>
+  </header>
+  <main class="wrap">
+    <div class="main-layout">
+      <section class="card standings-card" id="standingsCard" aria-labelledby="standingsTitle">
+        <div class="toolbar" id="standingsToolbar">
+          <div><h2 id="standingsTitle">Classificação projetada</h2><div class="sub">Atualizada pelos placares simulados</div><span id="simulationStatus" class="simulation-status" hidden></span></div>
+          <button class="btn" id="toggleStandings" type="button" aria-expanded="true" aria-controls="standingsContent">Ocultar classificação</button>
+        </div>
+        <div id="standingsContent">
+          <div class="legend" aria-label="Legenda das zonas"><span><i class="dot zone-groups"></i>Libertadores</span><span><i class="dot zone-pre"></i>Pré-Libertadores</span><span><i class="dot zone-sula"></i>Sul-Americana</span><span><i class="dot zone-relegation"></i>Rebaixados</span></div>
+          <div class="summary">
+            <div class="metric"><span>Vagas de grupos</span><strong id="directCount">4</strong></div>
+            <div class="metric"><span>Vagas preliminares</span><strong id="preCount">1</strong></div>
+            <div class="metric"><span>Última posição incluída</span><strong id="lastPlace">5º</strong></div>
+          </div>
+          <div class="tables-pair">
+            <div class="tablewrap"><table><thead><tr><th aria-label="Posição"></th><th>Clube</th><th>Pts</th><th>J</th><th>V</th><th>SG</th></tr></thead><tbody id="tbodyTop"></tbody></table></div>
+            <div class="tablewrap"><table><thead><tr><th aria-label="Posição"></th><th>Clube</th><th>Pts</th><th>J</th><th>V</th><th>SG</th></tr></thead><tbody id="tbodyBottom"></tbody></table></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card matches-card" aria-labelledby="matchesTitle">
+        <div class="toolbar matches-heading" id="matchesHeading">
+          <div class="matches-title-group" id="matchesTitleGroup">
+            <div><h2 id="matchesTitle">Jogos da rodada</h2><p class="sub">A classificação-base já considera os jogos encerrados. Placar oficial é somente leitura.</p></div>
+          </div>
+          <button class="btn" id="clearScores" type="button">Limpar placares simulados</button>
+        </div>
+        <nav class="round-nav" aria-label="Navegação entre rodadas">
+          <button class="round-arrow" id="prevRound" type="button" aria-label="Rodada anterior">←</button>
+          <select id="roundSelect" aria-label="Selecionar rodada"></select>
+          <button class="round-arrow" id="nextRound" type="button" aria-label="Próxima rodada">→</button>
+        </nav>
+        <details id="delayedFixtures" class="delayed-fixtures" hidden>
+          <summary id="delayedFixturesTitle">Jogos atrasados sem resultado</summary>
+          <div id="roundProgress" class="small round-meta"></div>
+        </details>
+        <div id="fixtures" class="fixtures"></div>
+        <p class="note">Os resultados oficiais permanecem fixos. Os placares preenchidos são hipóteses para partidas sem resultado oficial.</p>
+      </section>
+    </div>
+
+    <section class="card cups-card" aria-labelledby="cupsTitle">
+      <div class="cups-heading">
+        <div><h2 id="cupsTitle">Campeões das copas</h2><p class="sub">Escolha os campeões para ver a projeção das vagas.</p></div>
+        <span class="cups-season">PROJEÇÃO PARA 2027</span>
+      </div>
+      <div class="cup-selectors">
+        <div class="field"><label for="lib">Campeão da Libertadores</label><select id="lib"></select></div>
+        <div class="field"><label for="sula">Campeão da Sul-Americana</label><select id="sula"></select></div>
+        <div class="field"><label for="cdb">Campeão da Copa do Brasil</label><select id="cdb"></select></div>
+        <div class="field"><label for="vice">Vice-campeão da Copa do Brasil</label><select id="vice"></select></div>
+      </div>
+      <div id="explain" class="cup-projection" aria-live="polite"></div>
+      <div class="cups-footer"><div class="note cups-reference"><b>Vagas de referência para 2027</b><span>A distribuição final depende do regulamento e da posição dos clubes no Brasileirão. O simulador apresenta uma projeção.</span></div><button class="btn btn-secondary" id="reset" type="button">Restaurar cenário inicial</button></div>
+    </section>
+    <div class="foot">Protótipo independente, sem afiliação ao ge, à CBF ou à CONMEBOL.</div>
+  </main>
+  <script src="js/fixtures.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
