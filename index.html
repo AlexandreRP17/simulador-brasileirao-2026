@@ -23,7 +23,7 @@
     <div class="main-layout">
       <section class="card standings-card" id="standingsCard" aria-labelledby="standingsTitle">
         <div class="toolbar" id="standingsToolbar">
-          <div><h2 id="standingsTitle">Classificação projetada</h2><div class="sub">Atualizada pelos placares simulados</div><span id="simulationStatus" class="simulation-status" hidden></span></div>
+          <div><h2 id="standingsTitle">Classificação projetada</h2><span id="simulationStatus" class="simulation-status" hidden></span></div>
           <button class="btn" id="toggleStandings" type="button" aria-expanded="true" aria-controls="standingsContent">Ocultar classificação</button>
         </div>
         <div id="standingsContent">
@@ -38,7 +38,7 @@
       <section class="card matches-card" aria-labelledby="matchesTitle">
         <div class="toolbar matches-heading" id="matchesHeading">
           <div class="matches-title-group" id="matchesTitleGroup">
-            <div><h2 id="matchesTitle">Jogos da rodada</h2><p class="sub">A classificação-base já considera os jogos encerrados. Placar oficial é somente leitura.</p></div>
+            <div><h2 id="matchesTitle">Jogos da rodada</h2></div>
           </div>
           <button class="btn" id="clearScores" type="button">Limpar placares simulados</button>
         </div>
@@ -52,7 +52,6 @@
           <div id="roundProgress" class="small round-meta"></div>
         </details>
         <div id="fixtures" class="fixtures"></div>
-        <p class="note">Os resultados oficiais permanecem fixos. Os placares preenchidos são hipóteses para partidas sem resultado oficial.</p>
       </section>
     </div>
 
