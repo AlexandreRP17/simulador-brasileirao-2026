@@ -215,6 +215,51 @@ test('Copa do Brasil selectors disable the same club and clear a duplicate choic
   assert.equal(api.getQualification().groups[runnerUp].includes('Copa do Brasil: campe\u00e3o'), true);
 });
 
+test('Copa do Brasil selectors reject finalists from the same semifinal in every pairing', () => {
+  const api = createStandingsContext();
+  const atletico = api.getRows().find(row => row.name.includes('Atl') && row.name.includes('MG')).name;
+  const gremio = api.getRows().find(row => row.name.includes('Gr')).name;
+  const semifinalPairs = [[atletico, gremio], [gremio, atletico], ['Palmeiras', 'Vasco'], ['Vasco', 'Palmeiras']];
+  const clubs = [atletico, gremio, 'Palmeiras', 'Vasco'];
+  let valid = 0;
+  let invalid = 0;
+
+  for (const champion of clubs) for (const runnerUp of clubs) {
+    api.changeSelect('cdb', champion);
+    api.changeSelect('vice', runnerUp);
+    const isInvalid = champion === runnerUp || semifinalPairs.some(([first, second]) => first === champion && second === runnerUp);
+    if (isInvalid) {
+      invalid++;
+      assert.equal(api.getSelect('vice'), '', `${champion} x ${runnerUp} must be rejected`);
+      assert.match(api.getInnerHtml('explain'), /semifinais diferentes/);
+    } else {
+      valid++;
+      assert.equal(api.getSelect('cdb'), champion);
+      assert.equal(api.getSelect('vice'), runnerUp);
+    }
+  }
+  assert.equal(valid, 8);
+  assert.equal(invalid, 8);
+});
+
+test('qualification ignores invalid Copa do Brasil pairings injected outside the selectors', () => {
+  const api = createStandingsContext();
+  const atletico = api.getRows().find(row => row.name.includes('Atl') && row.name.includes('MG')).name;
+  const gremio = api.getRows().find(row => row.name.includes('Gr')).name;
+  api.changeSelect('cdb', 'Vasco');
+  api.changeSelect('vice', atletico);
+  api.changeSelect('cdb', gremio);
+  assert.equal(api.getSelect('cdb'), gremio);
+  assert.equal(api.getSelect('vice'), '');
+  assert.match(api.getInnerHtml('explain'), /semifinais diferentes/);
+
+  api.setSelect('cdb', 'Palmeiras');
+  api.setSelect('vice', 'Vasco');
+  const qualification = api.getQualification();
+  assert.equal(qualification.preliminary.Vasco, undefined);
+  assert.match(qualification.notes.join(' '), /escolha incompatível foi ignorada/);
+});
+
 test('foreign Libertadores champion gets a separate direct place without entering league standings', () => {
   const api = createStandingsContext();
   api.changeSelect('lib', 'Estudiantes');
@@ -235,7 +280,7 @@ test('invalid identical Copa do Brasil finalists are rejected by qualification p
   const champion = api.getRows()[5].name;
   api.setSelect('cdb', champion);
   api.setSelect('vice', champion);
-  assert.match(api.getQualification().notes.join(' '), /Seleção inválida/);
+  assert.match(api.getQualification().notes.join(' '), /escolha incompatível foi ignorada/);
   assert.equal(api.getQualification().pre, 1);
 });
 

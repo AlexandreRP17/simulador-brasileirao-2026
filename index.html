@@ -28,11 +28,6 @@
         </div>
         <div id="standingsContent">
           <div class="legend" aria-label="Legenda das zonas"><span><i class="dot zone-groups"></i>Libertadores</span><span><i class="dot zone-pre"></i>Pré-Libertadores</span><span><i class="dot zone-sula"></i>Sul-Americana</span><span><i class="dot zone-relegation"></i>Rebaixados</span></div>
-          <div class="summary">
-            <div class="metric"><span>Vagas de grupos</span><strong id="directCount">4</strong></div>
-            <div class="metric"><span>Vagas preliminares</span><strong id="preCount">1</strong></div>
-            <div class="metric"><span>Última posição incluída</span><strong id="lastPlace">5º</strong></div>
-          </div>
           <div class="tables-pair">
             <div class="tablewrap"><table><thead><tr><th aria-label="Posição"></th><th>Clube</th><th>Pts</th><th>J</th><th>V</th><th>SG</th></tr></thead><tbody id="tbodyTop"></tbody></table></div>
             <div class="tablewrap"><table><thead><tr><th aria-label="Posição"></th><th>Clube</th><th>Pts</th><th>J</th><th>V</th><th>SG</th></tr></thead><tbody id="tbodyBottom"></tbody></table></div>
@@ -64,7 +59,7 @@
     <section class="card cups-card" aria-labelledby="cupsTitle">
       <div class="cups-heading">
         <div><h2 id="cupsTitle">Campeões das copas</h2><p class="sub">Escolha os campeões para ver a projeção das vagas.</p></div>
-        <span class="cups-season">PROJEÇÃO PARA 2027</span>
+        <button class="btn btn-secondary" id="reset" type="button">Restaurar cenário inicial</button>
       </div>
       <div class="cup-selectors">
         <div class="field"><label for="lib">Campeão da Libertadores</label><select id="lib"></select></div>
@@ -72,10 +67,18 @@
         <div class="field"><label for="cdb">Campeão da Copa do Brasil</label><select id="cdb"></select></div>
         <div class="field"><label for="vice">Vice-campeão da Copa do Brasil</label><select id="vice"></select></div>
       </div>
+      <section class="qualification-summary" aria-labelledby="summaryTitle">
+        <h3 id="summaryTitle">Resumo das vagas</h3>
+        <div class="summary">
+          <div class="metric"><span>Vagas de grupos</span><strong id="directCount">4</strong></div>
+          <div class="metric"><span>Vagas preliminares</span><strong id="preCount">1</strong></div>
+          <div class="metric"><span>Última posição incluída</span><strong id="lastPlace">5º</strong></div>
+        </div>
+      </section>
       <div id="explain" class="cup-projection" aria-live="polite"></div>
-      <div class="cups-footer"><div class="note cups-reference"><b>Vagas de referência para 2027</b><span>A distribuição final depende do regulamento e da posição dos clubes no Brasileirão. O simulador apresenta uma projeção.</span></div><button class="btn btn-secondary" id="reset" type="button">Restaurar cenário inicial</button></div>
+      <div class="cups-footer"><div class="note cups-reference"><b>Vagas de referência para 2027</b><span>A distribuição final depende do regulamento e da posição dos clubes no Brasileirão. O simulador apresenta uma projeção.</span></div></div>
     </section>
-    <div class="foot">Protótipo independente, sem afiliação ao ge, à CBF ou à CONMEBOL.</div>
+    <div class="foot">Simulador independente do Brasileirão 2026, feito por um fã de futebol.</div>
   </main>
   <script src="js/fixtures.js"></script>
   <script src="js/app.js"></script>

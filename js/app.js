@@ -57,6 +57,17 @@ function fillSelect(id) {
   $(id).value = '';
 }
 
+const copaSemifinalOpponents = new Map([
+  [resolveLeagueClub('Atl\u00e9tico-MG'), resolveLeagueClub('Gr\u00eamio')],
+  [resolveLeagueClub('Gr\u00eamio'), resolveLeagueClub('Atl\u00e9tico-MG')],
+  ['Palmeiras', 'Vasco'],
+  ['Vasco', 'Palmeiras'],
+]);
+const getCopaFinalistConflict = (champion, runnerUp) =>
+  Boolean(champion && runnerUp && (champion === runnerUp || copaSemifinalOpponents.get(champion) === runnerUp));
+const copaConflictMessage = 'Campe\u00e3o e vice-campe\u00e3o da Copa do Brasil precisam vir de semifinais diferentes.';
+let copaSelectionNotice = '';
+
 function hasCompleteScore(score) {
   if (!score || score[0] === '' || score[1] === '' || score[0] == null || score[1] == null) return false;
   return score.every(value => Number.isInteger(Number(value)) && Number(value) >= 0 && Number(value) <= 30);
@@ -82,16 +93,21 @@ function getFixtureWeekday(date) {
 function syncCopaFinalistOptions() {
   const champion = $('cdb').value;
   let runnerUp = $('vice').value;
-  if (champion && champion === runnerUp) {
-    // Keep the champion selection when it changes; reject a duplicate runner-up choice.
+  if (getCopaFinalistConflict(champion, runnerUp)) {
+    // Keep the champion and clear the conflicting runner-up selection.
     $('vice').value = '';
     runnerUp = '';
+    copaSelectionNotice = copaConflictMessage;
+  } else {
+    copaSelectionNotice = '';
   }
-  [['cdb', runnerUp], ['vice', champion]].forEach(([id, unavailable]) => {
+  const disabledForVice = champion ? [champion, copaSemifinalOpponents.get(champion)] : [];
+  const disabledForChampion = runnerUp ? [runnerUp, copaSemifinalOpponents.get(runnerUp)] : [];
+  [['cdb', disabledForChampion], ['vice', disabledForVice]].forEach(([id, unavailable]) => {
     const select = $(id);
     const selected = select.value;
     select.innerHTML = '<option value="">Selecione um clube</option>' + cupContenders[id].map(name =>
-      '<option value="' + name + '"' + (name === unavailable ? ' disabled' : '') + '>' + name + '</option>'
+      '<option value="' + name + '"' + (unavailable.includes(name) ? ' disabled' : '') + '>' + name + '</option>'
     ).join('');
     select.value = selected;
   });
@@ -173,6 +189,10 @@ function getRows() {
 function getQualification(rows) {
   const selected={lib:$('lib').value,sula:$('sula').value,cdb:$('cdb').value,vice:$('vice').value};
   const notes=[];
+  if(getCopaFinalistConflict(selected.cdb,selected.vice)){
+    selected.vice='';
+    notes.push(copaConflictMessage+' A escolha incompat\u00edvel foi ignorada na proje\u00e7\u00e3o.');
+  }else if(copaSelectionNotice)notes.push(copaSelectionNotice);
   const pos=Object.fromEntries(rows.map((row,index)=>[row.name,index+1]));
   const eligible=name=>Boolean(name&&pos[name]&&pos[name]<=(rows.length===20?rows.length-4:rows.length));
   const groups=new Map(),pre=new Map(),externalGroups=new Map();
@@ -187,9 +207,7 @@ function getQualification(rows) {
   });
   if(selected.lib&&selected.lib===selected.sula)notes.push('O mesmo clube foi escolhido como campe\u00e3o da Libertadores e da Sul-Americana. Como essa combina\u00e7\u00e3o n\u00e3o ocorre em um cen\u00e1rio normal das competi\u00e7\u00f5es, ele foi contado uma \u00fanica vez.');
   let extraGroups=0,extraPre=0;
-  if(selected.cdb&&selected.vice&&selected.cdb===selected.vice){
-    notes.push('Sele\u00e7\u00e3o inv\u00e1lida: campe\u00e3o e vice-campe\u00e3o da Copa do Brasil precisam ser clubes diferentes. As vagas dessa competi\u00e7\u00e3o n\u00e3o foram projetadas.');
-  }else{
+  {
     const champ=selected.cdb,vice=selected.vice;
     const champGroupElsewhere=Boolean(champ&&eligible(champ)&&(groups.has(champ)||pos[champ]<=4));
     const champPreLeague=Boolean(champ&&eligible(champ)&&pos[champ]===5&&!groups.has(champ));
